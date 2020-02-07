@@ -1,0 +1,12 @@
+{
+    "name": "handcraftedinthealps/messenger-utils",
+    "description": "Utilities for symfony messenger.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "MessengerUtils",
+            "homepage": "https://github.com/handcraftedinthealps/messenger-utils/graphs/contributors"
+        }
+    ]
+}
