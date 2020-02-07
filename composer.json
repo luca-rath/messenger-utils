@@ -8,5 +8,8 @@
             "name": "MessengerUtils",
             "homepage": "https://github.com/handcraftedinthealps/messenger-utils/graphs/contributors"
         }
-    ]
+    ],
+    "require": {
+        "php": "^7.2"
+    }
 }
