@@ -45,13 +45,19 @@ class HandlerFailedExceptionSubscriber implements EventSubscriberInterface
             return;
         }
 
+        if (null === ($previous = $throwable->getPrevious())) {
+            return;
+        }
+
         if (null === $this->exceptions) {
-            $event->setThrowable($throwable->getPrevious());
+            $event->setThrowable($previous);
+
+            return;
         }
 
         foreach ($this->exceptions as $exception) {
             if (is_a($throwable, $exception)) {
-                $event->setThrowable($throwable->getPrevious());
+                $event->setThrowable($previous);
 
                 return;
             }
