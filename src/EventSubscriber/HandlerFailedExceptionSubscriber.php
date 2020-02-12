@@ -59,7 +59,7 @@ class HandlerFailedExceptionSubscriber implements EventSubscriberInterface
         if (null !== $this->busName) {
             $busNameStamp = $throwable->getEnvelope()->last(BusNameStamp::class);
 
-            if (null === $busNameStamp || $busNameStamp->getResult() !== $this->busName) {
+            if (null === $busNameStamp || $busNameStamp->getBusName() !== $this->busName) {
                 return;
             }
         }
