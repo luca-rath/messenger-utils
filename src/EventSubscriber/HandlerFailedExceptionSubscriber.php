@@ -8,9 +8,15 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
+use Symfony\Component\Messenger\Stamp\BusNameStamp;
 
 class HandlerFailedExceptionSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @var string|null
+     */
+    private $busName;
+
     /**
      * @var string[]|null
      */
@@ -19,8 +25,9 @@ class HandlerFailedExceptionSubscriber implements EventSubscriberInterface
     /**
      * @param string[]|null $exceptions
      */
-    public function __construct(?array $exceptions = null)
+    public function __construct(?string $busName = null, ?array $exceptions = null)
     {
+        $this->busName = $busName;
         $this->exceptions = $exceptions;
     }
 
@@ -49,6 +56,14 @@ class HandlerFailedExceptionSubscriber implements EventSubscriberInterface
             return;
         }
 
+        if (null !== $this->busName) {
+            $busNameStamp = $throwable->getEnvelope()->last(BusNameStamp::class);
+
+            if (null === $busNameStamp || $busNameStamp->getResult() !== $this->busName) {
+                return;
+            }
+        }
+
         if (null === $this->exceptions) {
             $event->setThrowable($previous);
 
@@ -56,7 +71,7 @@ class HandlerFailedExceptionSubscriber implements EventSubscriberInterface
         }
 
         foreach ($this->exceptions as $exception) {
-            if (is_a($throwable, $exception)) {
+            if (is_a($previous, $exception)) {
                 $event->setThrowable($previous);
 
                 return;
